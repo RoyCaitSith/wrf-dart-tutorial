@@ -16,17 +16,17 @@
 set datea = 2017042700  # need to start from a known valid date matching the wrfinput_d01 date
 
 # this has all wrf and wrfda executables and support files
-set wrfda_dir = /glade/scratch/romine/pert_hrrr/wrfda # set this appropriately #%%%#
+set wrfda_dir = /uufs/chpc.utah.edu/common/home/zpu-group16/cfeng/DART/softwares/WRFDA # set this appropriately #%%%#
 
-set work_dir  = /glade/scratch/romine/pert_hwt2018 # set this appropriately #%%%#
+set work_dir  = /uufs/chpc.utah.edu/common/home/zpu-group16/cfeng/03_CPEX_DAWN/10_ensemble/work # set this appropriately #%%%#
 
 # put the final eperturbation files here for later use
-set save_dir  = /glade/p/nmmm0001/romine/hwt2018/boundary_perts # set this appropriately #%%%#
+set save_dir  = /uufs/chpc.utah.edu/common/home/zpu-group16/cfeng/03_CPEX_DAWN/10_ensemble/work/boundary_perts # set this appropriately #%%%#
 
-set DART_DIR = /glade/p/work/romine/c_codes/DART_manhattan # set this appropriately #%%%#
+set DART_DIR = /uufs/chpc.utah.edu/common/home/zpu-group16/cfeng/DART # set this appropriately #%%%#
 
 # where the template namelist is for wrfvar
-set template_dir =  /glade/scratch/romine/pert_hwt2018/template     # set this appropriately #%%%#
+set template_dir = /uufs/chpc.utah.edu/common/home/zpu-group16/cfeng/03_CPEX_DAWN/10_ensemble/work/template # set this appropriately #%%%#
 set IC_PERT_SCALE      = 0.009
 set IC_HORIZ_SCALE     = 0.8
 set IC_VERT_SCALE      = 0.8
@@ -105,17 +105,19 @@ EOF
    # make a run file for wrfvar
 
    cat >> ${work_dir}/mem_${n}/gen_pert_${n}.csh << EOF
+
 #!/bin/csh
 #=================================================================
-#PBS -N gen_pert_bank_mem${n}
-#PBS -j oe
-#PBS -A COMPUTER_CHARGE_ACCOUNT
-#PBS -l walltime=0:05:00
-#PBS -q regular
-#PBS -m a
-#PBS -M USERNAME@X.X             # set this appropriately #%%%#
-#PBS -l select=4:ncpus=32:mpiprocs=16
-#PBS -k eod
+#SBATCH --time=${ADVANCE_TIME}\"
+#SBATCH --nodes=${NODES}\"
+#SBATCH --ntasks=${NTASKS}\"
+#SBATCH --account=${ACCOUNT}\"
+#SBATCH --partition=${PARTITION}\"
+#SBATCH -J ${JOBNAME}\"
+#SBATCH -o slurm-%j.out-%N\"
+#SBATCH -e slurm-%j.err-%N\"
+#SBATCH --mail-type=FAIL,BEGIN,END\"
+#SBATCH --mail-user=${EMAIL}\"
 #=================================================================
 
 cd ${work_dir}/mem_${n}
