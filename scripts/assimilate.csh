@@ -41,21 +41,25 @@ else if ( $SUPER_PLATFORM == 'cheyenne' ) then
 else if ( $SUPER_PLATFORM == 'kingspeak' ) then
 
     module purge
-    module load cmake/3.15.3
-    module load intel-oneapi-compilers/2021.4.0 intel-oneapi-mpi/2021.4.0 intel-oneapi-mkl/2022.0.2 hdf5
+    module load ncl
+    module load ncview
+    module load cmake/3.21.4
+    module load intel-oneapi-compilers/2021.4.0
+    module load openmpi/4.1.1
+    module load netcdf-c/4.8.1 netcdf-fortran/4.5.3
+    module load parallel-netcdf/1.12.2
+    module load hdf5
+    module load perl
+		
+    setenv MPI_SHEPHERD FALSE
 
-    # NETCDF
-    set NETCDF = "/uufs/chpc.utah.edu/sys/spack/linux-rocky8-nehalem/intel-2021.4.0/netcdf-impi"
+    set NETCDF = "/uufs/chpc.utah.edu/sys/spack/linux-rocky8-nehalem/intel-2021.4.0/netcdf-ompi"
     set PATH = ($PATH $NETCDF)
     set LD_BIRARY_PATH = ($LD_LIBRARY_PATH $NETCDF/lib)
-
-    # HDF5
     set HDF5 = "$HDF5_ROOT"
     set PATH = ($PATH $HDF5)
     set LD_LIBRARY_PATH = ($LD_LIBRARY_PATH $HDF5/lib)
-
-    setenv MPI_SHEPHERD FALSE
-
+      
     echo $start_time >& ${RUN_DIR}/filter_started
     mpirun -np $SLURM_NTASKS ./filter || exit 1
 
