@@ -63,6 +63,19 @@ else if ( $SUPER_PLATFORM == 'cheyenne' ) then
  mpiexec_mpt dplace -s 1 ./wrf.exe
 EOF
 
+else if ( $SUPER_PLATFORM == 'kingspeak' ) then
+   #TJH MPI_IB_CONGESTED, MPI_LAUNCH_TIMEOUT used after cheyenne O/S change in July 2019
+   #TJH setenv MPI_IB_CONGESTED 1
+   #TJH setenv MPI_LAUNCH_TIMEOUT 40
+   setenv MPI_SHEPHERD false
+   cat >! $RUN_DIR/advance_temp${emember}/wrf.info << EOF
+   ${gdatef[2]}  ${gdatef[1]}
+   ${gdate[2]}   ${gdate[1]}
+   $yyyy $mm $dd $hh $nn $ss
+             $domains
+   mpirun -np $SLURM_NTASKS ./wrf.exe
+EOF
+
 endif
 
 cd $RUN_DIR
