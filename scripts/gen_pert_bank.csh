@@ -16,7 +16,7 @@
 set datea = 2017042700  # need to start from a known valid date matching the wrfinput_d01 date
 
 # this has all wrf and wrfda executables and support files
-set wrfda_dir = /uufs/chpc.utah.edu/common/home/zpu-group16/cfeng/DART/softwares/WRFDA # set this appropriately #%%%#
+set wrfda_dir = /uufs/chpc.utah.edu/common/home/zpu-group16/cfeng/LIBRARIES/DART/WRFDA # set this appropriately #%%%#
 
 set work_dir  = /uufs/chpc.utah.edu/common/home/zpu-group16/cfeng/03_CPEX_DAWN/10_ensemble/work # set this appropriately #%%%#
 
