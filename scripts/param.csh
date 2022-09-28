@@ -38,9 +38,9 @@ set PERTS_DIR        = ${BASE_DIR}/perts
 #  Directories that can be used by many things
 set SHELL_SCRIPTS_DIR = ${BASE_DIR}/scripts
 set DART_DIR          = /uufs/chpc.utah.edu/common/home/zpu-group16/cfeng/DART                 # set this appropriately #%%%#
-set WRF_DM_SRC_DIR    = /uufs/chpc.utah.edu/common/home/zpu-group16/cfeng/DART/softwares/WRF   # set this appropriately #%%%#
-set WPS_SRC_DIR       = /uufs/chpc.utah.edu/common/home/zpu-group16/cfeng/DART/softwares/WPS   # set this appropriately #%%%#
-set VAR_SRC_DIR       = /uufs/chpc.utah.edu/common/home/zpu-group16/cfeng/DART/softwares/WRFDA # set this appropriately #%%%#
+set WRF_DM_SRC_DIR    = /uufs/chpc.utah.edu/common/home/zpu-group16/cfeng/LIBRARIES/DART/WRF   # set this appropriately #%%%#
+set WPS_SRC_DIR       = /uufs/chpc.utah.edu/common/home/zpu-group16/cfeng/LIBRARIES/DART/WPS   # set this appropriately #%%%#
+set VAR_SRC_DIR       = /uufs/chpc.utah.edu/common/home/zpu-group16/cfeng/LIBRARIES/DART/WRFDA # set this appropriately #%%%#
 
 # for generating wrf template files
 set GEO_FILES_DIR     = /uufs/chpc.utah.edu/common/home/zpu-group16/cfeng/TERRESTRIAL/WPS_GEOG # set this appropriately #%%%#
