@@ -82,15 +82,16 @@ EOF
    cat >! ${RUN_DIR}/rt_assim_init_${n}.csh << EOF
 #!/bin/csh
 #=================================================================
-#PBS -N first_advance_${n}
-#PBS -j oe
-#PBS -A ${COMPUTER_CHARGE_ACCOUNT}
-#PBS -l walltime=${ADVANCE_TIME}
-#PBS -q ${ADVANCE_QUEUE}
-#PBS -m ae
-#PBS -M ${EMAIL}
-#PBS -k eod
-#PBS -l select=${ADVANCE_NODES}:ncpus=${ADVANCE_PROCS}:mpiprocs=${ADVANCE_MPI}
+#SBATCH --time=${ADVANCE_TIME}
+#SBATCH --nodes=${NODES}
+#SBATCH --ntasks=${NTASKS}
+#SBATCH --account=${ACCOUNT}
+#SBATCH --partition=${PARTITION}
+#SBATCH -J first_advance_${n}
+#SBATCH -o slurm-%j.out-%N
+#SBATCH -e slurm-%j.err-%N
+#SBATCH --mail-type=FAIL,BEGIN,END
+#SBATCH --mail-user=${EMAIL}
 #=================================================================
 
    echo "rt_assim_init_${n}.csh is running in `pwd`"
@@ -121,7 +122,7 @@ EOF
 
 EOF
 
-   qsub ${RUN_DIR}/rt_assim_init_${n}.csh
+   sbatch ${RUN_DIR}/rt_assim_init_${n}.csh
 
    @ n++
 

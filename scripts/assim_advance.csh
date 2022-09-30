@@ -71,6 +71,34 @@ $yyyy $mm $dd $hh $nn $ss
  mpiexec_mpt dplace -s 1  ./wrf.exe
 EOF
 
+else if ( $SUPER_PLATFORM == 'kingspeak' ) then
+
+    module purge
+    module load ncl
+    module load ncview
+    module load cmake/3.21.4
+    module load intel-oneapi-compilers/2021.4.0
+    module load openmpi/4.1.1
+    module load netcdf-c/4.8.1 netcdf-fortran/4.5.3
+    module load parallel-netcdf/1.12.2
+    module load hdf5
+    module load perl
+
+    set NETCDF = "/uufs/chpc.utah.edu/sys/spack/linux-rocky8-nehalem/intel-2021.4.0/netcdf-ompi"
+    set PATH = ($PATH $NETCDF)
+    set LD_BIRARY_PATH = ($LD_LIBRARY_PATH $NETCDF/lib)
+    set HDF5 = "$HDF5_ROOT"
+    set PATH = ($PATH $HDF5)
+    set LD_LIBRARY_PATH = ($LD_LIBRARY_PATH $HDF5/lib)
+
+    cat >! $RUN_DIR/advance_temp${emember}/wrf.info << EOF
+    ${gdatef[2]}  ${gdatef[1]}
+    ${gdate[2]}   ${gdate[1]}
+    $yyyy $mm $dd $hh $nn $ss
+              $domains
+    mpirun -np $SLURM_NTASKS ./wrf.exe
+EOF
+
 endif
 
 cd $RUN_DIR

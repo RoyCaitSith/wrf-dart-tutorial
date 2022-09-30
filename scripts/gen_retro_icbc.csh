@@ -42,8 +42,7 @@ echo "gen_retro_icbc.csh is running in `pwd`"
 
 set datea     = 2017042700
 set datefnl   = 2017042712 # set this appropriately #%%%#
-set paramfile = /glade2/scratch2/USERNAME/WORK_DIR/scripts/param.csh   # set this appropriately #%%%#
-set paramfile = /glade/work/thoar/DART/clean_rma_trunk/models/wrf/tutorial/scripts/param.csh
+set paramfile = /uufs/chpc.utah.edu/common/home/zpu-group16/cfeng/03_CPEX_DAWN/10_ensemble/work/scripts/param.csh # set this appropriately #%%%#
 
 source $paramfile
 
@@ -171,25 +170,46 @@ EOF
      #${RUN_DIR}/WRF_RUN/real.serial.exe >& out.real.exe
      #if ( -e rsl.out.0000 )  cat rsl.out.0000 >> out.real.exe
 
+      #rm script.sed real_done rsl.*
+      #echo "2i\"                                      >! script.sed
+      #echo "#======================================\" >> script.sed
+      #echo "#PBS -N run_real\"                        >> script.sed
+      #echo "#PBS -A ${COMPUTER_CHARGE_ACCOUNT}\"      >> script.sed
+      #echo "#PBS -l walltime=00:05:00\"               >> script.sed
+      #echo "#PBS -q ${ADVANCE_QUEUE}\"                >> script.sed
+      #echo "#PBS -o run_real.out\"                    >> script.sed
+      #echo "#PBS -j oe\"                              >> script.sed
+      #echo "#PBS -k eod\"                             >> script.sed
+      #echo "#PBS -l select=3:ncpus=36:mpiprocs=36\"   >> script.sed
+      #echo "#PBS -V\"                                 >> script.sed
+      #echo "#======================================\" >> script.sed
+      #echo "\"                                        >> script.sed
+      #echo ""                                         >> script.sed
+      #echo 's%${1}%'"${paramfile}%g"                  >> script.sed
+      #sed -f script.sed ${SHELL_SCRIPTS_DIR}/real.csh >! real.csh
+
+      #qsub real.csh
+
       rm script.sed real_done rsl.*
       echo "2i\"                                      >! script.sed
       echo "#======================================\" >> script.sed
-      echo "#PBS -N run_real\"                        >> script.sed
-      echo "#PBS -A ${COMPUTER_CHARGE_ACCOUNT}\"      >> script.sed
-      echo "#PBS -l walltime=00:05:00\"               >> script.sed
-      echo "#PBS -q ${ADVANCE_QUEUE}\"                >> script.sed
-      echo "#PBS -o run_real.out\"                    >> script.sed
-      echo "#PBS -j oe\"                              >> script.sed
-      echo "#PBS -k eod\"                             >> script.sed
-      echo "#PBS -l select=3:ncpus=36:mpiprocs=36\"   >> script.sed
-      echo "#PBS -V\"                                 >> script.sed
+      echo "#SBATCH --time=${ADVANCE_TIME}\"          >> script.sed
+      echo "#SBATCH --nodes=${NODES}\"                >> script.sed
+      echo "#SBATCH --ntasks=${NTASKS}\"              >> script.sed
+      echo "#SBATCH --account=${ACCOUNT}\"            >> script.sed
+      echo "#SBATCH --partition=${PARTITION}\"        >> script.sed
+      echo "#SBATCH -J ${JOBNAME}\"                   >> script.sed
+      echo "#SBATCH -o slurm-%j.out-%N\"              >> script.sed
+      echo "#SBATCH -e slurm-%j.err-%N\"              >> script.sed
+      echo "#SBATCH --mail-type=FAIL,BEGIN,END\"      >> script.sed
+      echo "#SBATCH --mail-user=${EMAIL}\"            >> script.sed
       echo "#======================================\" >> script.sed
       echo "\"                                        >> script.sed
       echo ""                                         >> script.sed
       echo 's%${1}%'"${paramfile}%g"                  >> script.sed
       sed -f script.sed ${SHELL_SCRIPTS_DIR}/real.csh >! real.csh
 
-      qsub real.csh
+      sbatch real.csh
 
       # need to look for sometihng to know when this job is done
       while ( ! -e ${ICBC_DIR}/real_done )

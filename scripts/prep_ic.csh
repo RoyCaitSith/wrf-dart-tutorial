@@ -3,6 +3,18 @@
 # DART software - Copyright UCAR. This open source software is provided
 # by UCAR, "as is", without charge, subject to all terms of use at
 # http://www.image.ucar.edu/DAReS/DART/DART_download
+#=================================================================
+#SBATCH --time=3:00:00
+#SBATCH --nodes=1
+#SBATCH --ntasks=16
+#SBATCH --account=zpu-kp
+#SBATCH --partition=zpu-kp
+#SBATCH -J prep_ic
+#SBATCH -o slurm-%j.out-%N
+#SBATCH -e slurm-%j.err-%N
+#SBATCH --mail-type=FAIL,BEGIN,END
+#SBATCH --mail-user=${EMAIL}
+#=================================================================
 
 if ( $#argv > 0 ) then
    set n     = ${1}   # pass in the ensemble member number
@@ -17,7 +29,7 @@ else # values come from environment variables   #TJH If these are not set ....
 endif
 source $paramfile
 
-echo "prep_ic.csh using n=$n datep=$datep dn=$dn paramfile=$paramf"
+echo "prep_ic.csh using n=$n datep=$datep dn=$dn paramfile=$paramfile"
 
 if ( $dn == 1 ) then
 

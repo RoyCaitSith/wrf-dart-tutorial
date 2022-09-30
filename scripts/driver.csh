@@ -82,6 +82,8 @@ while ( 1 == 1 )
       set ic_queue = caldera
       set logfile = "${RUN_DIR}/ic_gen.log"
       set sub_command = "bsub -q ${ic_queue} -W 00:05 -o ${logfile} -n 1 -P ${COMPUTER_CHARGE_ACCOUNT}"
+   else if ( $SUPER_PLATFORM == 'kingspeak' ) then
+      set sub_command = "sbatch "
    else if ( $SUPER_PLATFORM == 'cheyenne' ) then
       set ic_queue = "economy"
       set sub_command = "qsub -l select=1:ncpus=2:mpiprocs=36:mem=5GB -l walltime=00:03:00 -q ${ic_queue} -A ${COMPUTER_CHARGE_ACCOUNT} -j oe -k eod -N icgen "
@@ -123,7 +125,7 @@ while ( 1 == 1 )
       if ( $SUPER_PLATFORM == 'cheyenne' ) then   # can't pass along arguments in the same way
          $sub_command -v mem_num=${n},date=${datep},domain=${domains},paramf=${paramfile} ${SHELL_SCRIPTS_DIR}/prep_ic.csh
       else
-         $sub_command " ${SHELL_SCRIPTS_DIR}/prep_ic.csh ${n} ${datep} ${dn} ${paramfile} "
+         $sub_command ${SHELL_SCRIPTS_DIR}/prep_ic.csh ${n} ${datep} ${domains} ${paramfile}
       endif
       @ n++
    end  # loop through ensemble members
@@ -239,6 +241,27 @@ while ( 1 == 1 )
       else
          bsub < assimilate.csh
       endif
+      set this_filter_runtime = $FILTER_TIME
+
+   else if ( $SUPER_PLATFORM == 'kingspeak' ) then
+
+      echo "2i\"                                                                 >! script.sed
+      echo "#=================================================================\" >> script.sed
+      echo "#SBATCH --time=${FILTER_TIME}\"                                      >> script.sed
+      echo "#SBATCH --nodes=${NODES}\"                                           >> script.sed
+      echo "#SBATCH --ntasks=${NTASKS}\"                                         >> script.sed
+      echo "#SBATCH --account=${ACCOUNT}\"                                       >> script.sed
+      echo "#SBATCH --partition=${PARTITION}\"                                   >> script.sed
+      echo "#SBATCH -J ASSIMILATE\"                                              >> script.sed
+      echo "#SBATCH -o slurm-%j.out-%N\"                                         >> script.sed
+      echo "#SBATCH -e slurm-%j.err-%N\"                                         >> script.sed
+      echo "#SBATCH --mail-type=FAIL,BEGIN,END\"                                 >> script.sed
+      echo "#SBATCH --mail-user=${EMAIL}\"                                       >> script.sed
+      echo "#================================================================="  >> script.sed
+      echo 's%${1}%'"${datea}%g"                                                 >> script.sed
+      echo 's%${2}%'"${paramfile}%g"                                             >> script.sed
+      sed -f script.sed ${SHELL_SCRIPTS_DIR}/assimilate.csh >! assimilate.csh
+      sbatch assimilate.csh
       set this_filter_runtime = $FILTER_TIME
 
    else if ( $SUPER_PLATFORM == 'cheyenne' ) then
